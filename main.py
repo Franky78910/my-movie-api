@@ -1,81 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 from fastapi.responses import HTMLResponse
+from movies_list import movies_list
+
 app = FastAPI()
 app.title = "Mi aplicacion con FastAPI"
 app.version = "0.0.1"
-movies_list = [
-    {
-        "id": 1, 
-        "title": "Deap POOL",
-        "overview": "Comica Infantil",
-        "year": 2024,
-        "rating": 100.0
-    },
-    {
-        "id": 2,
-        "title": "Batman",
-        "overview": "Comica",
-        "year": 2011,
-        "rating": 200.0
-    },
-    {
-        "id": 3,
-        "title": "Batman",
-        "overview": "Comica",
-        "year": 2011,
-        "rating": 200.0
-    },
-    {
-        "id": 4,
-        "title": "Batman",
-        "overview": "Comica",
-        "year": 2011,
-        "rating": 200.0
-    },
-    {
-        "id": 5,
-        "title": "Batman",
-        "overview": "Comica",
-        "year": 2011,
-        "rating": 200.0
-    },
-    {
-        "id": 6,
-        "title": "Batman",
-        "overview": "Comica",
-        "year": 2011,
-        "rating": 200.0
-    },
-    {
-        "id": 7,
-        "title": "Batman",
-        "overview": "Comica",
-        "year": 2011,
-        "rating": 200.0
-    },
-    {
-        "id": 8,
-        "title": "Batman",
-        "overview": "Comica",
-        "year": 2011,
-        "rating": 200.0
-    },
-    {
-        "id": 9,
-        "title": "Batman",
-        "overview": "Comica",
-        "year": 2011,
-        "rating": 200.0
-    },
-    {
-        "id": 10,
-        "title": "Batman",
-        "overview": "Comica",
-        "year": 2011,
-        "rating": 200.0
-    }
-    
-]
+
 @app.get('/', tags=["Home"])
 def message():
     return HTMLResponse ('<h1> Hello world </h1>')
@@ -89,3 +19,19 @@ def get_movie(id: int):
         if item["id"] == id:
             return item
     return []    
+
+@app.get('/movies/' , tags=["Movies"])
+def get_movies_by_category(category: str, year: int):
+    return [item for item in movies_list if item["year"] == year]
+
+@app.post('/movies', tags=['Movies'])
+def create_movie(id: int =Body(), title: str=Body(), overview: str =Body(), year: int =Body(), rating: float =Body(), category: str =Body()):
+    movies_list.append({
+        "id": id,
+        "title": title,
+        "overview": overview,
+        "year": year,
+        "rating": rating,
+        "category": category
+    })
+    return movies_list
